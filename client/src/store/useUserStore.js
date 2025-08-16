@@ -8,12 +8,13 @@ export const useUserStore =create((set)=>({
     updateProfile:async (data)=>{
         try {
             set({loading:true});
-          const res = await axiosInstance.put("/users.update",data);
+          const res = await axiosInstance.put("/users/update",data);
           useAuthStore.getState().setAuthUser(res.data.user);
             toast.success("Profile Update Successfully");
         } catch (error) {
-            toast.error(error.respond.data.message || "Something went wrong");
-        }finally{
+  toast.error(error.response?.data?.message || "Something went wrong");
+}
+finally{
             set({loading:false});
         }
     },
