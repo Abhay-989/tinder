@@ -1,60 +1,66 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+    },
+    age: {
+      type: Number,
+      required: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+      enum: ["male", "female"],
+    },
+    genderPreference: {
+      type: String,
+      required: true,
+      enum: ["male", "female", "both"],
+    },
+    bio: { type: String, default: "" },
+    image: { type: String, default: "" }, // ✅ lowercase "image"
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    dislikes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    matches: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-  },
-  age:{
-    type:Number,
-    required:true,
-  },
-  gender:{
-    type:String,
-    required:true,
-    enum:['male','female']
-  },
-  genderPreference:{
-    type:String,
-    require:true,
-    enumL:['male','female','both']
-  },
-  bio:{type:String,default:""},
-  Image:{type:String,default:""},
-  likes:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"User"
-  }],
-   dislikes:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"User"
-  }],
-  matches:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"User"
-  },
-  ],
-},
-{timestamps:true}
+  { timestamps: true }
 );
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
-})
+});
 
 // Method to compare password
 userSchema.methods.matchPassword = async function (enteredPassword) {
@@ -63,4 +69,4 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 const User = mongoose.model("User", userSchema);
 
-export  default User;
+export default User;

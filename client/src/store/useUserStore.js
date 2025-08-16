@@ -12,7 +12,7 @@ export const useUserStore =create((set)=>({
           useAuthStore.getState().setAuthUser(res.data.user);
             toast.success("Profile Update Successfully");
         } catch (error) {
-            toast.error(error.responf.data.message || "Something went wrong");
+            toast.error(error.respond.data.message || "Something went wrong");
         }finally{
             set({loading:false});
         }
