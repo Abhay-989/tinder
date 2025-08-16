@@ -116,12 +116,9 @@ export const getUserProfiles = async (req, res) => {
 				{ _id: { $nin: currentUser.likes } },
 				{ _id: { $nin: currentUser.dislikes } },
 				{ _id: { $nin: currentUser.matches } },
-				{
-					gender:
-						currentUser.genderPreference === "both"
-							? { $in: ["male", "female"] }
-							: currentUser.genderPreference,
-				},
+				currentUser.genderPreference === "both"
+					? { gender: { $in: ["male", "female"] } }
+					: { gender: currentUser.genderPreference },
 				{ genderPreference: { $in: [currentUser.gender, "both"] } },
 			],
 		});
